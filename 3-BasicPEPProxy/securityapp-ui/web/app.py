@@ -27,6 +27,11 @@ def authenticate():
     auth_url = auth_app.authorize_url()
     return redirect(auth_url)
 
+@app.route("/authenticate")
+def authenticate():
+    auth_url = auth_app.authorize_url()
+    return redirect(auth_url)
+
 
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
@@ -36,7 +41,7 @@ def auth():
 
     if request.method == 'GET':
         auth_code = request.args.get('code')
-        token_dict = auth_app.get_token_2(auth_code)
+        token_dict = auth_app.get_token(auth_code)
         return render_template('index.html', content="access_token: " + token_dict['access_token'] + ", " +
                                                      "token_type: " + token_dict['token_type'] + ", " +
                                                      "expires_in: " + str(token_dict['expires_in']) + ", " +

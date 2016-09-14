@@ -1,11 +1,10 @@
 import base64
-import requests.auth
-import requests
-
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
+
+import requests
 
 try:
     import simplejson as json
@@ -44,21 +43,9 @@ class OAuth2(object):
         self.access_token = token_dict['access_token']
         return token_dict
 
-    def get_token_2(self, code):
-            client_auth = requests.auth.HTTPBasicAuth(self.client_id, self.client_secret)
-            headers = {'Authorization': 'Basic {}'.format(self.base_64_auth_code),
-                       'Content-Type': 'application/x-www-form-urlencoded'}
-            post_data = {"grant_type": "authorization_code",
-                         "code": code,
-                         "redirect_uri": self.redirect_uri}
-            response = requests.post(self.token_url,
-                                     auth=client_auth,
-                                     headers=headers,
-                                     data=post_data)
-            token_json = response.json()
-            return token_json
-
     def get_user_info(self):
+        s = requests.Session()
+
         response = requests.get(self.idm_address + '/user?access_token=' + self.acess_token)
         user_info = json.loads(response)
         return user_info
